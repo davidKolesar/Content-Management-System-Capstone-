@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="CapstoneProject:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="capstone-project.war">
+      <element id="artifact" artifact-name="CapstoneProject:war exploded" />
+    </root>
+  </artifact>
+</component>

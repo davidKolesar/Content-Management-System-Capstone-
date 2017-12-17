@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:context="http://www.springframework.org/schema/context"
+      xmlns:tx="http://www.springframework.org/schema/tx"
+             xmlns:aop="http://www.springframework.org/schema/aop"
+      xsi:schemaLocation="http://www.springframework.org/schema/beans
+                          http://www.springframework.org/schema/beans/spring-beans.xsd
+                          http://www.springframework.org/schema/mvc
+                          http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                          http://www.springframework.org/schema/tx 
+                          http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+                          http://www.springframework.org/schema/context
+                          http://www.springframework.org/schema/context/spring-context.xsd
+      http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd"> 
+   <!-- Bean definitions go here -->
+
+
+ <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+       
+       <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+       <property name="url" value="jdbc:mysql://localhost:3306/capstoneproject"/>
+       <property name="username" value="root" />
+       <property name="password" value="apprentice"/>
+       <property name="initialSize" value="5"/>
+       <property name="maxTotal" value="10" />
+       
+   </bean>
+   
+   <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+       
+       <property name="dataSource" ref="dataSource"/> 
+   </bean>
+   
+   <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+       <property name="dataSource" ref="dataSource"/> 
+   </bean>
+
+    <bean id="userDao" class="com.mycompany.capstoneproject.dao.UserDaoDbImpl">
+        <constructor-arg ref="jdbcTemplate" />
+    </bean>
+    
+    <bean id="imageDao" class="com.mycompany.capstoneproject.dao.ImageDaoDbImpl">
+        <constructor-arg ref="jdbcTemplate" />
+    </bean>
+    
+    <bean id="hashtagDao" class="com.mycompany.capstoneproject.dao.HashtagDaoDbImpl">
+        <constructor-arg ref="jdbcTemplate" />
+        <constructor-arg ref="userDao" />
+    </bean>
+    
+    <bean id="blogPostCategoryDao" class="com.mycompany.capstoneproject.dao.BlogPostCategoryDaoDbImpl">
+        <constructor-arg ref="jdbcTemplate" />
+    </bean>
+
+    <bean id="blogPostDao" class="com.mycompany.capstoneproject.dao.BlogPostDaoDbImpl">
+        <constructor-arg ref="userDao" />
+        <constructor-arg ref="jdbcTemplate" />
+    </bean>
+    
+    <bean id="staticPageDao" class="com.mycompany.capstoneproject.dao.StaticPageDaoDbImpl">
+        <constructor-arg ref="userDao" />
+        <constructor-arg ref="jdbcTemplate" />
+    </bean>
+    
+       <!-- This is where I started messing with the xml -->
+       <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="smtp.gmail.com" />
+        <property name="port" value="587" />
+        <property name="username" value="team.tpd.augustcohort@gmail.com" />
+        <property name="password" value="tommy_paul_david" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.transport.protocol">smtp</prop>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage">
+        <property name="to" value="team.tpd.augustcohort@gmail.com"/>
+    <property name="from" value="customerservice@mycompany.com"/>
+    <property name="subject" value="New Customer Contact"/>
+</bean>
+     
+    <bean id="multipartResolver"
+        class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- max upload size in bytes -->
+        <property name="maxUploadSize" value="20971520" /> <!-- 20MB -->
+         
+        <!-- max size of file in memory (in bytes) -->
+        <property name="maxInMemorySize" value="1048576" /> <!-- 1MB -->
+ 
+    </bean>
+    
+    <bean
+        class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.Exception">Error</prop>
+            </props>
+        </property>
+    </bean>  
+       
+</beans>
