@@ -47,4 +47,4 @@ Validation of input is conducted by Hibernate.
 
 Functionality is junit tested.
 
-Data (pages, content, and accounts) are stored in MySQL Database.
+Data (pages, content, and accounts) are stored in MySQL Database.# Content-Management-System-Capstone-
