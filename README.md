@@ -7,6 +7,8 @@ Technology Stack:
 
 Java 8
 
+Maven
+
 JavaScript
 
 MySQL
